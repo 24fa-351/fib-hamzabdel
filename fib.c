@@ -16,6 +16,10 @@ int main(int argc, char* argv[])
     char* filename = argv[3];
 
     FILE* file = fopen(filename, "r");
+    if (!file) {
+        perror("Error opening file");
+        return 1;
+    }
 
     int file_num;
     fscanf(file, "%d", &file_num);
@@ -29,6 +33,7 @@ int main(int argc, char* argv[])
     } else if (method == 'i') {
         result = fibonacci_iterative(fibonacci_input);
     } else {
+        printf("Invalid method. Use 'r' for recursive or 'i' for iterative.\n");
         return 1;
     }
 
@@ -49,13 +54,18 @@ int fibonacci_recursive(int number)
 
 int fibonacci_iterative(int number)
 {
-    if (number <= 1)
+    if (number <= 1) {
         return number;
-    int a = 0, b = 1, next;
-    for (int i = 2; i <= number; i++) {
-        next = a + b;
-        a = b;
-        b = next;
     }
-    return b;
+
+    int previous = 0;
+    int current = 1;
+    int next_term;
+
+    for (int i = 2; i <= number; i++) {
+        next_term = previous + current;
+        previous = current;
+        current = next_term;
+    }
+    return current;
 }
